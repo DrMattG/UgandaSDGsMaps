@@ -1,0 +1,10 @@
+name: "UgandaSDGs"
+output_dir: "docs"
+navbar:
+  title: "Uganda project mapping SDGs"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Possible data sources"
+      href: SDGs_Uganda_data_sources.html
+      

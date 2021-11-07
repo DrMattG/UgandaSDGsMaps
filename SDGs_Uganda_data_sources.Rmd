@@ -1,0 +1,92 @@
+---
+title: "Table of data resources"
+author: "Matt"
+date: "7 11 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(SDGsR)
+```
+
+Potential sources of data for each goal and associated indicator are listed. For many of the indicators there may be difficulty in mapping the available data (or data is not available).
+
+
+```{r basic table, echo=FALSE, warning=FALSE, message=FALSE}
+library(readr)
+GoalsUganda <- read_delim("data/GoalsUganda.csv", 
+     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r table, echo=FALSE,warning=FALSE, message=FALSE}
+GoalsUganda %>% 
+  kableExtra::kable() %>% 
+  kableExtra::kable_styling() %>% 
+  kableExtra::scroll_box(width = "500px", height = "300px")
+```
+
+## Biodiversity data 
+
+### Forest lost
+
+#### Data from Global Forest Watch
+
+<iframe width="670" height="490" frameborder="0" src="https://www.globalforestwatch.org/embed/map/country/UGA/31/?category=summary&dashboardPrompts=eyJzaG93UHJvbXB0cyI6dHJ1ZSwicHJvbXB0c1ZpZXdlZCI6WyJkYXNoYm9hcmRBbmFseXNlcyJdLCJzZXR0aW5ncyI6eyJzaG93UHJvbXB0cyI6dHJ1ZSwicHJvbXB0c1ZpZXdlZCI6W10sInNldHRpbmdzIjp7Im9wZW4iOmZhbHNlLCJzdGVwSW5kZXgiOjAsInN0ZXBzS2V5IjoiIn0sIm9wZW4iOnRydWUsInN0ZXBJbmRleCI6MCwic3RlcHNLZXkiOiJkYXNoYm9hcmRBbmFseXNlcyJ9LCJvcGVuIjp0cnVlLCJzdGVwc0tleSI6ImRvd25sb2FkRGFzaGJvYXJkU3RhdHMifQ%3D%3D&mainMap=eyJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjZW50ZXIiOnsibGF0IjowLjYzNzgxMTgzNTM4ODI2NTksImxuZyI6MzAuMDI4MjU1NjMwNzYwNTk0fSwiem9vbSI6NS43NTM5NjgzNTE5NDc4NDYsImJhc2VtYXAiOnsidmFsdWUiOiJwbGFuZXQiLCJuYW1lIjoicGxhbmV0X21lZHJlc19ub3JtYWxpemVkX2FuYWx5dGljXzIwMjEtMDVfbW9zYWljIiwiY29sb3IiOiIifSwiZGF0YXNldHMiOlt7ImRhdGFzZXQiOiJnbGFkLXMyLWRlZm9yZXN0YXRpb24tYWxlcnRzIiwib3BhY2l0eSI6MSwidmlzaWJpbGl0eSI6dHJ1ZSwibGF5ZXJzIjpbImRlZm9yZXN0YXRpb24tYWxlcnRzLWdsYWQtczIiXX0seyJkYXRhc2V0IjoiZ2xhZC1kZWZvcmVzdGF0aW9uLWFsZXJ0cyIsIm9wYWNpdHkiOjEsInZpc2liaWxpdHkiOnRydWUsImxheWVycyI6WyJkZWZvcmVzdGF0aW9uLWFsZXJ0cy1nbGFkIl19LHsiZGF0YXNldCI6InJhZGQtZGVmb3Jlc3RhdGlvbi1hbGVydHMiLCJvcGFjaXR5IjoxLCJ2aXNpYmlsaXR5Ijp0cnVlLCJsYXllcnMiOlsiZGVmb3Jlc3RhdGlvbi1hbGVydHMtcmFkZCJdfSx7ImRhdGFzZXQiOiJwb2xpdGljYWwtYm91bmRhcmllcyIsImxheWVycyI6WyJkaXNwdXRlZC1wb2xpdGljYWwtYm91bmRhcmllcyIsInBvbGl0aWNhbC1ib3VuZGFyaWVzIl0sIm9wYWNpdHkiOjEsInZpc2liaWxpdHkiOnRydWV9XX0%3D&mapMenu=eyJkYXRhc2V0Q2F0ZWdvcnkiOiJmb3Jlc3RDaGFuZ2UifQ%3D%3D&mapPrompts=eyJvcGVuIjp0cnVlLCJzdGVwc0tleSI6InN1YnNjcmliZVRvQXJlYSIsInN0ZXBzSW5kZXgiOjB9&showMap=true"></iframe>
+
+
+### Biodiversity data from the Region
+
+#### GBIF
+
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
+occurrence <- readRDS("C:/Users/matthew.grainger/Documents/Projects_in_development/UgandaSDGsMaps/data/occurrence.RDS")
+
+```
+ 
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+n_records=dim(occurrence)[1]
+n_species=occurrence %>% 
+  select(species) %>%
+  drop_na() %>% 
+  distinct() %>% 
+  tally()
+Redlist=occurrence %>% 
+  select(iucnRedListCategory) %>% 
+  group_by(iucnRedListCategory) %>% 
+  tally()
+fam=occurrence %>% 
+  select(family) %>% 
+  distinct() %>% 
+  tally()
+```
+
+Data from GBIF consists of `r n_records` from `r n_species` distinct species from `r fam` families. Records come from `r Redlist[1,2]` Critically Endangered, `r Redlist[3,2]` Endangered, `r Redlist[5,2]` Vulnerable and `r Redlist[6,2]` Near Threatened species.  
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+occurrence %>% 
+  select(iucnRedListCategory) %>% 
+  group_by(iucnRedListCategory) %>% 
+  tally() %>% 
+  ggplot(aes(iucnRedListCategory,log(n), fill=iucnRedListCategory)) +
+  geom_histogram(stat="identity")+
+  labs(x="IUCN RedList Category")+
+  theme_classic()+
+  theme(legend.position = "none")
+```
+
+Most records come from Animalia. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+occurrence %>% 
+  select(kingdom) %>%
+  group_by(kingdom) %>% 
+  tally() %>% 
+  ggplot(aes(kingdom, log(n), fill=kingdom)) + 
+  geom_histogram(stat="identity")+
+  labs(x="Family")+
+  theme_classic()+
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
