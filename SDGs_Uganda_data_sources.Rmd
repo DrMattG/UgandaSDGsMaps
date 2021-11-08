@@ -24,7 +24,7 @@ GoalsUganda <- read_delim("data/GoalsUganda.csv",
 GoalsUganda %>% 
   kableExtra::kable() %>% 
   kableExtra::kable_styling() %>% 
-  kableExtra::scroll_box(width = "500px", height = "300px")
+  kableExtra::scroll_box(width = "500px", height = "500px")
 ```
 
 ## Biodiversity data 
